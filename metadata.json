@@ -1,0 +1,6 @@
+{
+  "name": "Nhạc của tôi",
+  "description": "Trình nghe nhạc và video từ Google Drive với chế độ offline, hiệu ứng visualizer và hỗ trợ cài đặt APK/PWA cho Android.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

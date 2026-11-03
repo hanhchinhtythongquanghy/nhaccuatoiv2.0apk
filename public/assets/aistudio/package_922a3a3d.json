@@ -1,0 +1,19 @@
+{
+  "name": "nhac-cua-toi",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Trình phát nhạc và video Google Drive cho Web và Android",
+  "scripts": {
+    "build": "node scripts/check.js",
+    "android:add": "cap add android",
+    "android:sync": "npm run build && cap sync android",
+    "android:open": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/core": "^7.4.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.3"
+  }
+}

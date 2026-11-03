@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<title>Nhạc của tôi</title>
+<meta name="description" content="Trình nghe nhạc đọc từ thư mục Google Drive">
+<meta name="theme-color" content="#14161c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand"><span class="logo" data-i="music"></span><b>Nhạc của tôi</b></div>
+    <label class="search">
+      <span class="s-ic" data-i="search"></span>
+      <input id="search" type="search" placeholder="Tìm bài hát, ca sĩ, thư mục…" autocomplete="off" enterkeyhint="search">
+      <button type="button" id="searchClear" class="s-clear" aria-label="Xóa tìm kiếm" data-i="close" hidden></button>
+    </label>
+    <button class="icon-btn" id="btnRefresh" title="Quét lại thư mục Drive" aria-label="Quét lại" data-i="refresh"></button>
+    <button class="icon-btn" id="btnSettings" title="Cài đặt" aria-label="Cài đặt" data-i="settings"></button>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-view="all" class="active">Nhạc</button>
+    <button data-view="videos">Video</button>
+    <button data-view="folders">Thư mục</button>
+    <button data-view="favorites">Yêu thích</button>
+    <button data-view="offline">Đã tải</button>
+    <button data-view="playlists">Playlist</button>
+    <button data-view="queue">Hàng đợi</button>
+  </nav>
+
+  <div id="offbar" hidden>Đang ngoại tuyến — chỉ phát được các bài đã tải về máy</div>
+
+  <main id="main"></main>
+
+  <footer class="player" id="player">
+    <canvas class="fx fx-bar" id="fxBar" aria-hidden="true"></canvas>
+    <div class="mini-prog"><i id="miniProg"></i></div>
+
+    <div class="p-info" data-ctl="expand">
+      <div class="cover np-cover"><span data-i="music"></span></div>
+      <div class="meta">
+        <div class="t np-title">Chưa phát bài nào</div>
+        <div class="s np-artist"></div>
+      </div>
+      <button class="icon-btn fav-d" data-ctl="fav" aria-label="Yêu thích" data-i="heart-o"></button>
+    </div>
+
+    <div class="p-center">
+      <div class="p-controls">
+        <button class="icon-btn" data-ctl="shuffle" title="Phát ngẫu nhiên (S)" aria-label="Ngẫu nhiên" data-i="shuffle"></button>
+        <button class="icon-btn" data-ctl="prev" title="Bài trước" aria-label="Bài trước" data-i="prev"></button>
+        <button class="play-btn" data-ctl="play" title="Phát / Tạm dừng (Space)" aria-label="Phát / Tạm dừng" data-i="play"></button>
+        <button class="icon-btn" data-ctl="next" title="Bài sau" aria-label="Bài sau" data-i="next"></button>
+        <button class="icon-btn" data-ctl="repeat" title="Lặp lại (R)" aria-label="Lặp lại" data-i="repeat"></button>
+      </div>
+      <div class="p-seek">
+        <span class="cur">0:00</span>
+        <input class="seek" type="range" min="0" max="1000" value="0" aria-label="Tua bài hát">
+        <span class="dur">0:00</span>
+      </div>
+    </div>
+
+    <div class="p-right">
+      <button class="chip" data-ctl="speed" title="Tốc độ phát">1×</button>
+      <button class="chip" data-ctl="sleep" title="Hẹn giờ tắt nhạc"><span data-i="timer"></span><span class="lbl"></span></button>
+      <button class="icon-btn" data-ctl="queue" title="Hàng đợi" aria-label="Hàng đợi" data-i="queue"></button>
+      <button class="icon-btn" data-ctl="mute" title="Tắt tiếng (M)" aria-label="Tắt tiếng" data-i="volume"></button>
+      <input class="vol" type="range" min="0" max="1" step="0.01" value="0.9" aria-label="Âm lượng">
+    </div>
+
+    <div class="p-mini">
+      <button class="icon-btn" data-ctl="play" aria-label="Phát / Tạm dừng" data-i="play"></button>
+      <button class="icon-btn" data-ctl="next" aria-label="Bài sau" data-i="next"></button>
+    </div>
+  </footer>
+</div>
+
+<!-- Màn hình đang phát (điện thoại) -->
+<section id="np" class="np" aria-label="Đang phát">
+  <canvas class="fx fx-np" id="fxNp" aria-hidden="true"></canvas>
+  <div class="np-top">
+    <button class="icon-btn" data-ctl="collapse" aria-label="Thu nhỏ" data-i="chevron-down"></button>
+    <span>Đang phát</span>
+    <button class="icon-btn" data-ctl="more" aria-label="Tùy chọn" data-i="more"></button>
+  </div>
+  <div class="np-art"><div class="cover np-cover big"><span data-i="music"></span></div></div>
+  <div class="np-meta">
+    <div class="meta">
+      <div class="t np-title">Chưa phát bài nào</div>
+      <div class="s np-artist"></div>
+    </div>
+    <button class="icon-btn" data-ctl="fav" aria-label="Yêu thích" data-i="heart-o"></button>
+  </div>
+  <div class="np-seek">
+    <input class="seek" type="range" min="0" max="1000" value="0" aria-label="Tua bài hát">
+    <div class="times"><span class="cur">0:00</span><span class="dur">0:00</span></div>
+  </div>
+  <div class="np-controls">
+    <button class="icon-btn" data-ctl="shuffle" aria-label="Ngẫu nhiên" data-i="shuffle"></button>
+    <button class="icon-btn lg" data-ctl="prev" aria-label="Bài trước" data-i="prev"></button>
+    <button class="play-btn xl" data-ctl="play" aria-label="Phát / Tạm dừng" data-i="play"></button>
+    <button class="icon-btn lg" data-ctl="next" aria-label="Bài sau" data-i="next"></button>
+    <button class="icon-btn" data-ctl="repeat" aria-label="Lặp lại" data-i="repeat"></button>
+  </div>
+  <div class="np-extra">
+    <button class="chip" data-ctl="speed">1×</button>
+    <button class="chip" data-ctl="sleep"><span data-i="timer"></span><span class="lbl"></span></button>
+    <button class="chip" data-ctl="queue"><span data-i="queue"></span>Hàng đợi</button>
+  </div>
+</section>
+
+<dialog id="dlg"></dialog>
+<dialog id="videoDlg" class="video-dialog"><div class="video-head"><b id="videoTitle">Đang xem video</b><button type="button" id="closeVideo" class="btn">Đóng</button></div><video id="videoPlayer" controls playsinline preload="metadata"></video></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<audio id="audio" preload="metadata"></audio>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

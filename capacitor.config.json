@@ -1,0 +1,8 @@
+{
+  "appId": "com.nhaccuatoi.musicplayer",
+  "appName": "Nhạc của tôi",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
